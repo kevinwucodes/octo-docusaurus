@@ -1,0 +1,28 @@
+name: Generate Package Lockfile
+
+on:
+  workflow_dispatch: # Allows manual trigger from the GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate lockfile
+        run: npm install --package-lock-only
+
+      - name: Commit and push package-lock.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: generate package-lock.json via GitHub Actions"
+          file_pattern: "package-lock.json"
